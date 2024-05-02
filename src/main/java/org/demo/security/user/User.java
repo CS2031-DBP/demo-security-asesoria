@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,22 +22,28 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
+    @Column(name = "role", nullable = false)
     Role role;
 
+    @Column(name = "first_name", nullable = false)
     String firstName;
+    @Column(name = "last_name", nullable = false)
     String lastName;
+    @Column(name = "age", nullable = false)
     Integer age;
+    @Column(name = "email", nullable = false, unique = true)
     String email;
+    @Column(name = "password", nullable = false)
     String password;
+    @Column(name = "created_at", nullable = false)
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-    Set<Item> items;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "owner")
+    Set<Item> items = new HashSet<>();
 
     @Transient
     String role_prefix = "ROLE_";
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
